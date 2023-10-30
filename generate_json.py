@@ -5,7 +5,6 @@ import pandas as pd
 from get_bundle_id import get_single_bundle_id
 import os
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--token", help="Github token")
