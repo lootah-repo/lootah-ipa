@@ -6,7 +6,6 @@ import pandas as pd
 import shutil
 import os
 
-
 def get_single_bundle_id(url, name="temp.ipa"):
     reponse = requests.get(url)
     open(name, 'wb').write(reponse.content)
