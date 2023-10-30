@@ -1,5 +1,28 @@
 {
-    "apps": [],
+    "apps": [
+        {
+            "name": "MovieBoxPro_13.0",
+            "bundleIdentifier": "com.xd.mbp31",
+            "version": "1.0",
+            "versionDate": "2023-10-30",
+            "size": 48975579,
+            "downloadURL": "https://github.com/lootah-repo/lootah-ipa/releases/download/10-30-2023/MovieBoxPro_13.0.ipa",
+            "developerName": "",
+            "localizedDescription": "",
+            "iconURL": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/com.xd.mbp31.png"
+        },
+        {
+            "name": "VidList_1.0_b2",
+            "bundleIdentifier": "ru.ano.videoplayer",
+            "version": "1.0",
+            "versionDate": "2023-10-30",
+            "size": 65350190,
+            "downloadURL": "https://github.com/lootah-repo/lootah-ipa/releases/download/10-30-2023/VidList_1.0_b2.ipa",
+            "developerName": "",
+            "localizedDescription": "",
+            "iconURL": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/ru.ano.videoplayer.png"
+        }
+    ],
     "identifier": "com.example.source",
     "name": "Lootah apps",
     "news": [],
