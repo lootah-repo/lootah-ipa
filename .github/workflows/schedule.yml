@@ -10,6 +10,7 @@ on:
       - released
       - created
   workflow_dispatch:
+
     
 permissions: write-all
   
