@@ -6,6 +6,7 @@ import pandas as pd
 import shutil
 import os
 
+
 def get_single_bundle_id(url, name="temp.ipa"):
     reponse = requests.get(url)
     open(name, 'wb').write(reponse.content)
@@ -53,17 +54,14 @@ def get_single_bundle_id(url, name="temp.ipa"):
     return "com.example.app"
 
 
-def generate_bundle_id_csv(token):
+def generate_bundle_id_csv(token, repo_name="lootah-repo/lootah-ipa"):
     g = github.Github(token)
-    repo = g.get_repo("lootah-repo/lootah-ipa")
+    repo = g.get_repo(repo_name)
     releases = repo.get_releases()
 
     df = pd.DataFrame(columns=["name", "bundleId"])
 
     for release in releases:
-        date = release.created_at.strftime("%Y-%m-%d")
-        if date > "2022-11-10":
-            continue
         print(release.title)
         for asset in release.get_assets():
             if (asset.name[-3:] != "ipa"):
@@ -91,8 +89,8 @@ def generate_bundle_id_csv(token):
                 ignore_index=True
             )
 
-    df.to_csv("bundleIdmap.csv", index=False)
+    df.to_csv("bundleId.csv", index=False)
 
 
 if __name__ == "__main__":
-    pass
+    generate_bundle_id_csv(None)
