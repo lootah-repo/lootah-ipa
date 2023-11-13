@@ -27,7 +27,7 @@ jobs:
         run: git fetch origin main
 
       - name: Checkout main branch
-        run: git checkout main
+        run: git checkout -B main origin/main
 
       - name: execute py script
         env: 
