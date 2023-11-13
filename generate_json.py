@@ -29,27 +29,40 @@ def process_release(asset, repo_name, df, data):
         version = "Unknown"
         tweaks = None
 
-    bundle_id = df.loc[df["name"] == app_name, "bundleId"].values[0] if app_name in df["name"].values else get_single_bundle_id(asset.browser_download_url)
+    bundle_id = df.loc[df["name"] == app_name, "bundleId"].values[0] if app_name in df["name"].values else get_bundle_id_and_icon(asset.browser_download_url)
 
-    # Remove old versions
-    data["apps"] = [app for app in data["apps"] if not (app["name"] == app_name and app["version"] == version)]
+    # Check if the app already exists in the data dictionary
+    existing_app = next((app for app in data["apps"] if app["name"] == app_name), None)
 
-    data["apps"].append({
-        "name": app_name,
-        "realBundleID": bundle_id,
-        "bundleID": bundle_id,
-        "bundleIdentifier": bundle_id,
-        "version": version,
-        "versionDate": date,
-        "fullDate": full_date,
-        "size": asset.size,
-        "down": asset.browser_download_url,
-        "downloadURL": asset.browser_download_url,
-        "developerName": "",
-        "localizedDescription": tweaks,
-        "icon": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png",
-        "iconURL": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png"
-    })
+    if existing_app:
+        # Replace the old version with the new one
+        existing_app.update({
+            "version": version,
+            "versionDate": date,
+            "fullDate": full_date,
+            "size": asset.size,
+            "down": asset.browser_download_url,
+            "downloadURL": asset.browser_download_url,
+            "localizedDescription": tweaks,
+        })
+    else:
+        # Add a new entry for the app
+        data["apps"].append({
+            "name": app_name,
+            "realBundleID": bundle_id,
+            "bundleID": bundle_id,
+            "bundleIdentifier": bundle_id,
+            "version": version,
+            "versionDate": date,
+            "fullDate": full_date,
+            "size": asset.size,
+            "down": asset.browser_download_url,
+            "downloadURL": asset.browser_download_url,
+            "developerName": "",
+            "localizedDescription": tweaks,
+            "icon": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png",
+            "iconURL": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png"
+        })
 
 def main(token):
     out_file = "apps.json"
