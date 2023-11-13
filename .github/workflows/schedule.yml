@@ -34,6 +34,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           commit_message: Automated Change
+          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.ref_name }}
           # Optional. Options used by `git-commit`.
           # See https://git-scm.com/docs/git-commit#_options
           commit_options: '--no-verify --signoff'
