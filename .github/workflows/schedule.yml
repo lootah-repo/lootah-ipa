@@ -5,10 +5,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:  # This line might be unnecessary; consider removing it.
-      contents: read
-      actions: write
-  
+    # Remove the permissions key if unnecessary
+    # permissions:
+    #   contents: read
+    #   actions: write
+
     steps:
       - name: checkout repo content
         uses: actions/checkout@v3
@@ -32,16 +33,10 @@ jobs:
           python generate_json.py -t ${{ secrets.GITHUB_TOKEN }}
 
       - uses: stefanzweifel/git-auto-commit-action@v4
-        env: 
-          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           commit_message: Automated Change
           commit_options: '--no-verify --signoff'
           file_pattern: 'apps.json bundleId.csv icons/*'
-          push_options: ''  # Remove the --force option
 
       # Uncomment the following lines if you want to commit and push separately
       # - name: commit files
