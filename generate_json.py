@@ -31,6 +31,9 @@ def process_release(asset, repo_name, df, data):
 
     bundle_id = df.loc[df["name"] == app_name, "bundleId"].values[0] if app_name in df["name"].values else get_single_bundle_id(asset.browser_download_url)
 
+    # Remove old versions
+    data["apps"] = [app for app in data["apps"] if app["name"] != app_name or app["version"] != version]
+
     data["apps"].append({
         "name": app_name,
         "realBundleID": bundle_id,
