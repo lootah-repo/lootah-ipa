@@ -2,7 +2,8 @@ from github import Github
 import json
 import argparse
 import pandas as pd
-from get_bundle_id import get_bundle_id_and_icon
+import requests
+import zipfile
 import os
 import shutil
 
@@ -10,6 +11,30 @@ def fetch_existing_data():
     if os.path.exists("bundleId.csv"):
         return pd.read_csv("bundleId.csv")
     return pd.DataFrame(columns=["name", "bundleId"])
+
+def get_bundle_id_and_icon(ipa_file_url):
+    # Download the IPA file
+    response = requests.get(ipa_file_url)
+    with open("temp.ipa", "wb") as ipa_file:
+        ipa_file.write(response.content)
+
+    # Extract bundle ID and other relevant information
+    bundle_id = extract_bundle_id("temp.ipa")
+    # Clean up temporary files if needed
+    # os.remove("temp.ipa")
+
+    return bundle_id
+
+def extract_bundle_id(ipa_file_path):
+    with zipfile.ZipFile(ipa_file_path, 'r') as ipa_zip:
+        # You need to replace "Info.plist" with the actual path to the Info.plist file in your IPA
+        with ipa_zip.open("Payload/YourApp.app/Info.plist") as plist_file:
+            # Extract bundle ID from the Info.plist file
+            # You need to replace "CFBundleIdentifier" with the actual key for bundle ID in your Info.plist
+            # You might want to use a proper plist parser for this task
+            bundle_id = "com.example.app"  # Replace this with your actual logic
+
+    return bundle_id
 
 def process_release(asset, repo_name, df, data):
     if not asset.name.endswith(".ipa"):
