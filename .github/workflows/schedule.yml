@@ -41,9 +41,6 @@ jobs:
           commit_message: Automated Change
           commit_options: '--no-verify --signoff'
           file_pattern: 'apps.json bundleId.csv icons/*'
-          commit_user_name: My GitHub Actions Bot
-          commit_user_email: my-github-actions-bot@example.org
-          commit_author: Author <actions@github.com>
           push_options: ''  # Remove the --force option
 
       # Uncomment the following lines if you want to commit and push separately
