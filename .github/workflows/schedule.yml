@@ -18,11 +18,11 @@ jobs:
       with:
         REPOSITORY: .
         STATUS_OPTIONS: ''
-        FILE_PATTERN: 'apps.json bundleId.csv icons/*'
+        FILE_PATTERN_ADD: 'apps.json bundleId.csv icons/*'  # Change FILE_PATTERN to FILE_PATTERN_ADD
         BRANCH: ''
 
         ADD_OPTIONS: ''
-        FILE_PATTERN: 'apps.json bundleId.csv icons/*'
+        FILE_PATTERN_ADD: 'apps.json bundleId.csv icons/*'  # Change FILE_PATTERN to FILE_PATTERN_ADD
 
         COMMIT_OPTIONS: '--no-verify --signoff'
         COMMIT_USER_NAME: My GitHub Actions Bot
