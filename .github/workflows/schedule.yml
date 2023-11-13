@@ -37,10 +37,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: Update Latest Release
         run: |
           # Get the latest release tag name
-          LATEST_RELEASE_TAG=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r .tag_name)
+          LATEST_RELEASE_TAG=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://github.com/lootah-repo/lootah-ipa/releases/latest" | jq -r .tag_name)
 
           # Update the tag associated with the latest release
           git tag -fa "$LATEST_RELEASE_TAG" -m "Set as the latest release"
