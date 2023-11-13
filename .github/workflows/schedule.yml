@@ -26,7 +26,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           python generate_json.py -t ${{ secrets.GITHUB_TOKEN }}
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v4
         env: 
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
@@ -34,6 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           commit_message: Automated Change
+          branch: main
           ref: ${{ github.event.pull_request.head.ref }}
           # Optional. Options used by `git-commit`.
           # See https://git-scm.com/docs/git-commit#_options
