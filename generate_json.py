@@ -35,16 +35,20 @@ def process_release(asset, repo_name, df, data):
     existing_app = next((app for app in data["apps"] if app["name"] == app_name), None)
 
     if existing_app:
-        # Replace the old version with the new one
-        existing_app.update({
-            "version": version,
-            "versionDate": date,
-            "fullDate": full_date,
-            "size": asset.size,
-            "down": asset.browser_download_url,
-            "downloadURL": asset.browser_download_url,
-            "localizedDescription": tweaks,
-        })
+        # Update only if the new version has a more recent release date
+        existing_release_date = pd.to_datetime(existing_app["versionDate"], format="%Y-%m-%d", errors="coerce")
+        new_release_date = pd.to_datetime(date, format="%Y-%m-%d", errors="coerce")
+
+        if new_release_date > existing_release_date:
+            existing_app.update({
+                "version": version,
+                "versionDate": date,
+                "fullDate": full_date,
+                "size": asset.size,
+                "down": asset.browser_download_url,
+                "downloadURL": asset.browser_download_url,
+                "localizedDescription": tweaks,
+            })
     else:
         # Add a new entry for the app
         data["apps"].append({
