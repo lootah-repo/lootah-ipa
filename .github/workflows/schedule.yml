@@ -17,11 +17,17 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8 #install the python needed
+          python-version: 3.8 # install the python needed
 
       - name: install python packages
         run: |
           pip install PyGithub pandas
+
+      - name: Fetch main branch
+        run: git fetch origin main
+
+      - name: Checkout main branch
+        run: git checkout main
 
       - name: execute py script
         env: 
@@ -31,9 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           python generate_json.py -t ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set main branch
-        run: git branch -M main
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         env: 
