@@ -1,6 +1,7 @@
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
   workflow_dispatch:
 
@@ -11,39 +12,37 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: checkout repo content
-        uses: actions/checkout@v3 # checkout the repository content to github runner.
-
-      - name: setup python
-        uses: actions/setup-python@v4
+      - name: Checkout repo content
+        uses: actions/checkout@v2
         with:
-          python-version: 3.8 # install the python needed
+          ref: main
 
-      - name: install python packages
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Python packages
         run: |
           pip install PyGithub pandas
 
       - name: Fetch main branch
         run: git fetch origin main
 
-      - name: Checkout main branch
-        run: git checkout -B main origin/main
+      - name: Create and checkout main branch
+        run: git checkout -b main origin/main
 
-      - name: execute py script
+      - name: Execute Python script
         env: 
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python generate_json.py -t ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        env: 
-          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Auto-commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Automated Change
           commit_options: '--no-verify --signoff'
