@@ -11,7 +11,7 @@ def fetch_existing_data():
         return pd.read_csv("bundleId.csv")
     return pd.DataFrame(columns=["name", "bundleId"])
 
-def process_release(asset, df, data):
+def process_release(asset, repo_name, df, data):
     if not asset.name.endswith(".ipa"):
         return
 
@@ -66,7 +66,7 @@ def main(token):
         print(release.title)
 
         for asset in release.get_assets():
-            process_release(asset, existing_data, data)
+            process_release(asset, repo_name, existing_data, data)
 
     existing_data.to_csv("bundleId.csv", index=False)
 
