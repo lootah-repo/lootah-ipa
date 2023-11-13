@@ -32,7 +32,8 @@ def get_bundle_id_and_icon(url, name="temp.ipa", icon_folder="icons/"):
 
     if icon_path:
         try:
-            with archive.open(icon_path) as origin, open(icon_folder + bundle_id + ".png", "wb") as dst:
+            icon_name = os.path.basename(icon_path)  # Extract the icon name from the path
+            with archive.open(icon_path) as origin, open(icon_folder + bundle_id + "_" + icon_name, "wb") as dst:
                 shutil.copyfileobj(origin, dst)
         except Exception as e:
             print(f"Error copying icon: {e}")
