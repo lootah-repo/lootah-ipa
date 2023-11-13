@@ -1,6 +1,22 @@
 {
     "apps": [
         {
+            "name": "MovieBoxPro",
+            "realBundleID": "com.xd.mbp31",
+            "bundleID": "com.xd.mbp31",
+            "bundleIdentifier": "com.xd.mbp31",
+            "version": "13.1",
+            "versionDate": "2023-11-13",
+            "fullDate": "20231113071405",
+            "size": 36829723,
+            "down": "https://github.com/lootah-repo/lootah-ipa/releases/download/11-14-2023/MovieBoxPro_13.1_%40abdulla.ipa",
+            "downloadURL": "https://github.com/lootah-repo/lootah-ipa/releases/download/11-14-2023/MovieBoxPro_13.1_%40abdulla.ipa",
+            "developerName": "",
+            "localizedDescription": "",
+            "icon": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/com.xd.mbp31.png",
+            "iconURL": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/com.xd.mbp31.png"
+        },
+        {
             "name": "esign",
             "realBundleID": "p3.xyz.yyyue.esign",
             "bundleID": "p3.xyz.yyyue.esign",
@@ -15,22 +31,6 @@
             "localizedDescription": "",
             "icon": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/p3.xyz.yyyue.esign.png",
             "iconURL": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/p3.xyz.yyyue.esign.png"
-        },
-        {
-            "name": "MovieBoxPro",
-            "realBundleID": "com.xd.mbp31",
-            "bundleID": "com.xd.mbp31",
-            "bundleIdentifier": "com.xd.mbp31",
-            "version": "13.0",
-            "versionDate": "2023-10-31",
-            "fullDate": "20231031232821",
-            "size": 48975579,
-            "down": "https://github.com/lootah-repo/lootah-ipa/releases/download/10-31-2023/MovieBoxPro_13.0_%40abdulla.ipa",
-            "downloadURL": "https://github.com/lootah-repo/lootah-ipa/releases/download/10-31-2023/MovieBoxPro_13.0_%40abdulla.ipa",
-            "developerName": "",
-            "localizedDescription": "",
-            "icon": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/com.xd.mbp31.png",
-            "iconURL": "https://raw.githubusercontent.com/lootah-repo/lootah-ipa/main/icons/com.xd.mbp31.png"
         },
         {
             "name": "NineAnimator",
