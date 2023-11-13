@@ -1,21 +1,12 @@
 on:
   push:
     branches: ["main"]
-  release:
-    types:
-      - published
-      - deleted
-      - edited
-      - prereleased
-      - released
-      - created
-  workflow_dispatch:
     
 permissions: write-all
   
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: checkout repo content
@@ -46,7 +37,7 @@ jobs:
           # Optional. Options used by `git-commit`.
           # See https://git-scm.com/docs/git-commit#_options
           commit_options: '--no-verify --signoff'
-          file_pattern: 'apps.json index.html bundleId.csv icons/*'
+          file_pattern: 'apps.json bundleId.csv icons/*'
 
           # Optional commit user and author settings
           commit_user_name: My GitHub Actions Bot # defaults to "github-actions[bot]"
