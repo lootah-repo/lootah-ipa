@@ -1,87 +1,84 @@
-import requests
-import zipfile
-import plistlib
 from github import Github
+import json
+import argparse
 import pandas as pd
-import shutil
+from get_bundle_id import get_bundle_id_and_icon  # Corrected import
 import os
+import shutil
 
-def download_and_extract(url, name="temp.ipa"):
-    response = requests.get(url)
-    open(name, 'wb').write(response.content)
+def fetch_existing_data():
+    if os.path.exists("bundleId.csv"):
+        return pd.read_csv("bundleId.csv")
+    return pd.DataFrame(columns=["name", "bundleId"])
 
-    with zipfile.ZipFile(name, mode="r") as archive:
-        for file_name in archive.namelist():
-            if file_name.endswith(".app/Info.plist"):
-                info_file = file_name
+def process_release(asset, repo_name, df, data):
+    if not asset.name.endswith(".ipa"):
+        return
 
-        with archive.open(info_file) as fp:
-            return plistlib.load(fp)
+    name = asset.name[:-4]
+    date = asset.created_at.strftime("%Y-%m-%d")
+    full_date = asset.created_at.strftime("%Y%m%d%H%M%S")
 
-def get_bundle_id_and_icon(url, name="temp.ipa", icon_folder="icons/"):
-    pl = download_and_extract(url, name)
+    try:
+        app_name, version, tweaks = name.split("_", 2)
+        tweaks, _ = tweaks.split("@", 1)
+        if tweaks:
+            tweaks = "Injected with " + tweaks[:-1].replace("_", " ")
+    except:
+        app_name = name
+        version = "Unknown"
+        tweaks = None
 
-    bundle_id = pl.get("CFBundleIdentifier", "com.example.app")
-    icon_path = ""
+    bundle_id = df.loc[df["name"] == app_name, "bundleId"].values[0] if app_name in df["name"].values else get_bundle_id_and_icon(asset.browser_download_url)
 
-    if "CFBundleIconFiles" in pl:
-        icon_path = os.path.join(os.path.dirname(info_file), pl["CFBundleIconFiles"][0])
-    elif "CFBundleIcons" in pl:
-        icon_prefix = pl["CFBundleIcons"]["CFBundlePrimaryIcon"]["CFBundleIconFiles"][0]
-        for file_name in archive.namelist():
-            if icon_prefix in file_name:
-                icon_path = file_name
+    data["apps"].append({
+        "name": app_name,
+        "realBundleID": bundle_id,
+        "bundleID": bundle_id,
+        "bundleIdentifier": bundle_id,
+        "version": version,
+        "versionDate": date,
+        "fullDate": full_date,
+        "size": asset.size,
+        "down": asset.browser_download_url,
+        "downloadURL": asset.browser_download_url,
+        "developerName": "",
+        "localizedDescription": tweaks,
+        "icon": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png",
+        "iconURL": f"https://raw.githubusercontent.com/{repo_name}/main/icons/{bundle_id}.png"
+    })
 
-    if icon_path:
-        try:
-            with archive.open(icon_path) as origin, open(icon_folder + bundle_id + ".png", "wb") as dst:
-                shutil.copyfileobj(origin, dst)
-        except Exception as e:
-            print(f"Error copying icon: {e}")
+def main(token):
+    out_file = "apps.json"
+    clone_file = "index.html"
 
-    return bundle_id
+    existing_data = fetch_existing_data()
 
-def generate_bundle_id_csv(token, repo_name="lootah-repo/lootah-ipa"):
+    # Clear apps
+    data = {"apps": []}
+
     g = Github(token)
+    repo_name = "lootah-repo/lootah-ipa"
     repo = g.get_repo(repo_name)
     releases = repo.get_releases()
 
-    df = pd.DataFrame(columns=["name", "bundleId"])
-
     for release in releases:
         print(release.title)
+
         for asset in release.get_assets():
-            if not asset.name.endswith("ipa"):
-                continue
-            name = asset.name[:-4]
-            print(asset.name)
+            process_release(asset, repo_name, existing_data, data)
 
-            try:
-                app_name = name.split("-", 1)[0]
-            except Exception as e:
-                print(f"Error parsing app name: {e}")
-                app_name = name
+    existing_data.to_csv("bundleId.csv", index=False)
 
-            bundle_id = get_bundle_id_and_icon(asset.browser_download_url)
+    with open(out_file, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
 
-            # Check if the bundle identifier already exists in the DataFrame
-            if not df[df["bundleId"] == bundle_id].empty:
-                continue
-
-            df = pd.concat(
-                [
-                    df,
-                    pd.DataFrame(
-                        {
-                            "name": [app_name],
-                            "bundleId": [bundle_id]
-                        }
-                    )
-                ],
-                ignore_index=True
-            )
-
-    df.to_csv("bundleId.csv", index=False)
+    shutil.copyfile(out_file, clone_file)
 
 if __name__ == "__main__":
-    generate_bundle_id_csv(None)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--token", help="Github token")
+    args = parser.parse_args()
+    token = args.token
+
+    main(token)
