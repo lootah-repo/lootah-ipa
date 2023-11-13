@@ -2,7 +2,7 @@ from github import Github
 import json
 import argparse
 import pandas as pd
-from get_bundle_id import get_single_bundle_id
+from get_bundle_id import get_bundle_id_and_icon
 import os
 import shutil
 
